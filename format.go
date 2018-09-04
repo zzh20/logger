@@ -3,6 +3,8 @@ package logger
 import (
 	"bytes"
 	"fmt"
+	"runtime"
+	"strconv"
 	"sync"
 
 	"time"
@@ -60,22 +62,21 @@ func getLevelStr(level uint8) string {
 // Format 格式化
 func (format *DefaultFormatter) Format(level uint8, msg string) *bytes.Buffer {
 	buff := buffs.get()
-	fmt.Fprintf(buff, "%s log %s - ", time.Now().Format("2006-01-02 15:04:05"), getLevelStr(level))
-	/*	_, file, line, ok := runtime.Caller(4)
-		if ok {
-			buff.WriteByte(' ')
-			var i = len(file) - 2
-			for ; i >= 0; i-- {
-				if file[i] == '/' {
-					i++
-					break
-				}
+	fmt.Fprintf(buff, "%s ", time.Now().Format("2006-01-02 15:04:05"))
+	_, file, line, ok := runtime.Caller(4)
+	if ok {
+		var i = len(file) - 2
+		for ; i >= 0; i-- {
+			if file[i] == '/' {
+				i++
+				break
 			}
-			buff.WriteString(file[i:])
-			buff.WriteByte(':')
-			buff.WriteString(strconv.FormatInt(int64(line), 10))
 		}
-		buff.WriteString("] ")*/
+		buff.WriteString(file[i:])
+		buff.WriteByte(':')
+		buff.WriteString(strconv.FormatInt(int64(line), 10))
+	}
+	fmt.Fprintf(buff, " %s - ", getLevelStr(level))
 	buff.WriteString(msg)
 	buff.WriteByte('\n')
 	return buff
