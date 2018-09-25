@@ -35,18 +35,22 @@ func (fileDevice *FileDevice) Write(b []byte) {
 			fileDevice.writer.Flush()
 			err = fileDevice.file.Close()
 			if err != nil {
-				fmt.Printf("ERROR: logger cannot close file: %v\n", err.Error())
+				fmt.Printf("ERROR: logger can't close file: %v\n", err.Error())
 			}
 			fileDevice.file = nil
 		}
 	}
 	if fileDevice.file == nil {
 		filename := fmt.Sprintf("%s-%v.log", fileDevice.prefix, date)
-		filePath := fileDevice.prefix[0:strings.LastIndex(fileDevice.prefix, "/")]
-		err := os.MkdirAll(filePath, 0711)
+		if strings.LastIndex(fileDevice.prefix, "/") > -1 {
+			filePath := fileDevice.prefix[0:strings.LastIndex(fileDevice.prefix, "/")]
+			if filePath != "" {
+				err = os.MkdirAll(filePath, 0711)
+			}
+		}
 		fileDevice.file, err = os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
-			fmt.Printf("ERROR: logger cannot open file: %v\n", err.Error())
+			fmt.Printf("ERROR: logger can't open file: %v\n", err.Error())
 			return
 		}
 		fileDevice.writer = bufio.NewWriter(fileDevice.file)
@@ -55,7 +59,7 @@ func (fileDevice *FileDevice) Write(b []byte) {
 	_, err = fileDevice.writer.Write(b)
 
 	if err != nil {
-		fmt.Printf("ERROR: logger cannot write file: %v\n", err.Error())
+		fmt.Printf("ERROR: logger can't write file: %v\n", err.Error())
 	}
 	return
 }

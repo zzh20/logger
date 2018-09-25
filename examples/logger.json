@@ -1,0 +1,16 @@
+{
+  "writers":
+  [
+    {
+      "device":"console",
+      "args":"",
+      "level":0
+    },
+    {
+      "device":"file",
+      "args":"logs/name",
+      "level":1
+    }
+  ],
+  "logLevel":["debug","info","warn","error","fatal"]
+}
