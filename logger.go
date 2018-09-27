@@ -134,5 +134,6 @@ func Error(format string, a ...interface{}) {
 // Fatal 输出FATAL级别日志
 func Fatal(format string, a ...interface{}) {
 	worker.Write(LogLevelFatal, format, a...)
+	worker.Flush()
 	os.Exit(1)
 }
