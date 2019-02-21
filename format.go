@@ -62,7 +62,7 @@ func getLevelStr(level uint8) string {
 // Format 格式化
 func (format *DefaultFormatter) Format(level uint8, msg string) *bytes.Buffer {
 	buff := buffs.get()
-	fmt.Fprintf(buff, "%s ", time.Now().Format("2006-01-02 15:04:05.000"))
+	fmt.Fprintf(buff, "%s ", time.Now().Format("2006-01-02 15:04:05.000000"))
 	_, file, line, ok := runtime.Caller(4)
 	if ok {
 		var i = len(file) - 2
